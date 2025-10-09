@@ -1,0 +1,187 @@
+/* ===========================================================
+   ESTILOS BASE - APLICACIÓN PyQt5
+   Autor: Manuel Brambilla
+   Descripción: Paleta moderna oscura con acentos en verde agua
+   =========================================================== */
+
+/* ==== FUENTE GENERAL ==== */
+QWidget {
+    background-color: #1E272E;
+    color: #ECECEC;
+    font-family: "Segoe UI", "Roboto", "Noto Sans", sans-serif;
+    font-size: 14px;
+}
+
+/* ==== BARRA LATERAL ==== */
+#BarraLateral {
+    background-color: #2C3E50;
+    border-right: 2px solid #1A252F;
+    padding: 10px;
+}
+
+/* ==== BOTONES DEL SIDEBAR ==== */
+#botonSidebar {
+    background-color: #34495E;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px;
+    text-align: left;
+    transition: background-color 0.3s ease;
+}
+
+#botonSidebar:hover {
+    background-color: #3E5871;
+}
+
+#botonSidebar:pressed {
+    background-color: #22313F;
+}
+
+#botonSidebar[active="true"] {
+    background-color: #1ABC9C;
+    color: #FFFFFF;
+}
+
+/* ==== SECCIÓN PRINCIPAL (CONTENIDO) ==== */
+#SeccionPrincipal {
+    background-color: #2F3640;
+    border-radius: 8px;
+    margin: 8px;
+    padding: 20px;
+}
+
+/* ==== TITULOS Y TEXTOS ==== */
+QLabel#tituloPrincipal {
+    font-size: 22px;
+    font-weight: bold;
+    color: #1ABC9C;
+}
+
+QLabel#subtitulo {
+    font-size: 16px;
+    color: #B2BEC3;
+}
+
+QLabel {
+    font-size: 14px;
+    color: #ECECEC;
+}
+
+/* ==== CAMPOS DE TEXTO ==== */
+QLineEdit, QComboBox, QSpinBox, QDoubleSpinBox {
+    background-color: #3B3B3B;
+    border: 1px solid #555;
+    border-radius: 6px;
+    color: #FFFFFF;
+    padding: 6px 8px;
+    selection-background-color: #1ABC9C;
+}
+
+QLineEdit:focus, QComboBox:focus, QSpinBox:focus, QDoubleSpinBox:focus {
+    border: 1px solid #1ABC9C;
+    background-color: #444;
+}
+
+/* ==== TABLAS ==== */
+QTableWidget {
+    background-color: #3A3A3A;
+    border: 1px solid #555;
+    gridline-color: #666;
+    color: #ECECEC;
+    alternate-background-color: #323232;
+    selection-background-color: #1ABC9C;
+    selection-color: #FFFFFF;
+}
+
+QHeaderView::section {
+    background-color: #34495E;
+    color: #FFFFFF;
+    padding: 6px;
+    border: none;
+    border-right: 1px solid #2C3E50;
+}
+
+/* ==== BOTONES DE ACCIÓN (Agregar, Eliminar, Modificar) ==== */
+#botonAccion {
+    background-color: #1ABC9C;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 6px 12px;
+}
+
+#botonAccion:hover {
+    background-color: #16A085;
+}
+
+#botonAccion:pressed {
+    background-color: #0E6655;
+}
+
+/* ==== BOTONES DE FORMULARIO (Aceptar, Calcular, Cancelar, etc.) ==== */
+#botonFormulario {
+    background-color: #2980B9;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    padding: 6px 12px;
+}
+
+#botonFormulario:hover {
+    background-color: #2471A3;
+}
+
+#botonFormulario:pressed {
+    background-color: #1A5276;
+}
+
+/* ==== CHECKBOX Y RADIOBUTTON ==== */
+QCheckBox, QRadioButton {
+    spacing: 6px;
+}
+
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 14px;
+    height: 14px;
+}
+
+QCheckBox::indicator:unchecked {
+    border: 1px solid #AAA;
+    background-color: #3A3A3A;
+}
+
+QCheckBox::indicator:checked {
+    border: 1px solid #1ABC9C;
+    background-color: #1ABC9C;
+}
+
+/* ==== SCROLLBARS ==== */
+QScrollBar:vertical {
+    background-color: #2F3640;
+    width: 12px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #1ABC9C;
+    border-radius: 6px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #16A085;
+}
+
+/* ==== TOOLTIP ==== */
+QToolTip {
+    background-color: #1ABC9C;
+    color: white;
+    border-radius: 4px;
+    padding: 5px;
+}
