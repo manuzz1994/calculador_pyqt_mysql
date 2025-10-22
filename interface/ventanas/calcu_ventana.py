@@ -54,7 +54,6 @@ class CalcuVentana(QWidget):
         self.btn_calcular = QPushButton("Calcular Costos")
         self.btn_calcular.clicked.connect(self.calcular_costos)
         layout_principal.addWidget(self.btn_calcular)
-        print("✅ Botón añadido")  # Debug
         
         # Área de resultados
         self.label_resultados = QLabel("Los resultados aparecerán aquí...")
@@ -62,7 +61,6 @@ class CalcuVentana(QWidget):
         layout_principal.addWidget(self.label_resultados)
         
         self.setLayout(layout_principal)
-        print("✅ Layout establecido")  # Debug
         
     def actualizar_formulario(self):
         """Esta función se llamará cuando cambie el producto"""
@@ -71,7 +69,6 @@ class CalcuVentana(QWidget):
         
     def calcular_costos(self):
         """Calcular los costos - versión simple para probar"""
-        print("🔄 Botón calcular presionado")  # Debug
         
         producto = self.combo_producto.currentData()
         peso_agua = self.input_peso_agua.text()
@@ -88,4 +85,3 @@ class CalcuVentana(QWidget):
         """
         
         self.label_resultados.setText(resultado)
-        print("✅ Resultados mostrados")  # Debug

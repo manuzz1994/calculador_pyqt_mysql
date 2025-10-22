@@ -1,8 +1,11 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QStackedWidget, QHBoxLayout
 from interface.barra_lateral import BarraLateral
 from interface.ventanas.calcu_ventana import CalcuVentana
-from interface.ventanas.materiales import Materiales
-from interface.ventanas.recetas import Recetas
+# Importar las nuevas ventanas modulares
+from interface.ventanas.materiales.gestion_materiales import GestionMateriales
+from interface.ventanas.materiales.gestion_envases import GestionEnvases
+from interface.ventanas.materiales.gestion_costos_fijos import GestionCostosFijos
+from interface.ventanas.recetas.lista_recetas import ListaRecetas
 
 class VentanaPrincipal(QMainWindow):
     def __init__(self):
@@ -12,7 +15,7 @@ class VentanaPrincipal(QMainWindow):
         self.setGeometry(100, 100, 800, 600)
         self.setObjectName("VentanaPrincipal")
         
-        #Contenedor principal
+        # Contenedor principal
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         principal_layout = QHBoxLayout()
@@ -30,12 +33,17 @@ class VentanaPrincipal(QMainWindow):
         
         # Ventanas individuales
         self.calcu_ventana = CalcuVentana()
-        self.materiales = Materiales()
-        self.recetas = Recetas()
+        self.gestion_materiales = GestionMateriales()
+        #self.gestion_envases = GestionEnvases()
+        #self.gestion_costos_fijos = GestionCostosFijos()
+        #self.lista_recetas = ListaRecetas()
         
+        # Agregar todas las ventanas al stacked widget
         self.ventanas.addWidget(self.calcu_ventana)
-        self.ventanas.addWidget(self.materiales)
-        self.ventanas.addWidget(self.recetas)
+        self.ventanas.addWidget(self.gestion_materiales)
+        #self.ventanas.addWidget(self.gestion_envases)
+        #self.ventanas.addWidget(self.gestion_costos_fijos)
+        #self.ventanas.addWidget(self.lista_recetas)
         
         # Mostrar la ventana de cálculo por defecto
         self.ventanas.setCurrentWidget(self.calcu_ventana)
@@ -44,8 +52,15 @@ class VentanaPrincipal(QMainWindow):
         if opcion == "Calculadora":
             self.ventanas.setCurrentWidget(self.calcu_ventana)
         elif opcion == "Materiales":
-            self.ventanas.setCurrentWidget(self.materiales)
+            self.ventanas.setCurrentWidget(self.gestion_materiales)
+        elif opcion == "Envases":
+            #self.ventanas.setCurrentWidget(self.gestion_envases)
+            pass
+        elif opcion == "Costos Fijos":
+            #self.ventanas.setCurrentWidget(self.gestion_costos_fijos)
+            pass
         elif opcion == "Recetas":
-            self.ventanas.setCurrentWidget(self.recetas)
+            #self.ventanas.setCurrentWidget(self.lista_recetas)
+            pass
         else:
             print("Opción no reconocida")
