@@ -7,7 +7,6 @@ class CalcuVentana(QWidget):
     def __init__(self):
         super().__init__()
         self.setObjectName("SeccionPrincipal")
-        print("✅ CalcuVentana inicializada")  # Debug
         
         self.init_ui()
         
@@ -19,7 +18,6 @@ class CalcuVentana(QWidget):
         titulo = QLabel("Calculadora de Costos")
         titulo.setObjectName("tituloPrincipal")
         layout_principal.addWidget(titulo)
-        print("✅ Título añadido")  # Debug
         
         # Grupo de selección de producto
         grupo_seleccion = QGroupBox("Seleccionar Producto")
@@ -32,7 +30,6 @@ class CalcuVentana(QWidget):
         self.combo_producto.addItem("Difusor", "difusor")
         self.combo_producto.addItem("Yeso", "yeso")
         self.combo_producto.currentIndexChanged.connect(self.actualizar_formulario)
-        print("✅ ComboBox creado")  # Debug
         
         layout_seleccion.addRow("Tipo de producto:", self.combo_producto)
         grupo_seleccion.setLayout(layout_seleccion)

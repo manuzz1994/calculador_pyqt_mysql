@@ -8,7 +8,7 @@ def probar_conexion():
     recetas = obtener_recetas()
     if recetas:
         for receta in recetas:
-            print(f"   - {receta['nombre']}") # ({receta['tipo']})")
+            print(f"   - {receta['nombre']} ({receta['tipo']})")
     else:
         print("   ❌ No se pudieron obtener las recetas")
         return False

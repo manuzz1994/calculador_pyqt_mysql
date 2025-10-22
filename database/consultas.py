@@ -33,3 +33,6 @@ def obtener_costos_fijos_por_tipo(tipo_producto):
     placeholders = ', '.join(['%s'] * len(aplica_a))
     query = f"SELECT * FROM costos_fijos WHERE aplica_a IN ({placeholders})"
     return db.ejecutar_consulta(query, aplica_a)
+
+def obtener_materia_prima():
+    return db.ejecutar_consulta("SELECT * FROM materia_prima ORDER BY nombre")

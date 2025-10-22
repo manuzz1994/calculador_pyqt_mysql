@@ -4,7 +4,7 @@ from mysql.connector import Error
 class Database:
     def __init__(self):
         self.host = 'localhost'
-        self.database = 'calculadora_velas'
+        self.database = 'calculadora_costos'
         self.user = 'root' 
         self.password = 'brambilla09'  # PW bdd
         
