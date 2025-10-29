@@ -1,6 +1,7 @@
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QStackedWidget, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QWidget, QStackedWidget, QHBoxLayout
 from interface.barra_lateral import BarraLateral
 from interface.ventanas.calcu_ventana import CalcuVentana
+
 # Importar las nuevas ventanas modulares
 from interface.ventanas.materiales.gestion_materiales import GestionMateriales
 from interface.ventanas.materiales.gestion_envases import GestionEnvases
@@ -34,16 +35,16 @@ class VentanaPrincipal(QMainWindow):
         # Ventanas individuales
         self.calcu_ventana = CalcuVentana()
         self.gestion_materiales = GestionMateriales()
-        #self.gestion_envases = GestionEnvases()
-        #self.gestion_costos_fijos = GestionCostosFijos()
-        #self.lista_recetas = ListaRecetas()
+        self.gestion_envases = GestionEnvases()
+        self.gestion_costos_fijos = GestionCostosFijos()
+        self.lista_recetas = ListaRecetas()
         
         # Agregar todas las ventanas al stacked widget
         self.ventanas.addWidget(self.calcu_ventana)
         self.ventanas.addWidget(self.gestion_materiales)
-        #self.ventanas.addWidget(self.gestion_envases)
-        #self.ventanas.addWidget(self.gestion_costos_fijos)
-        #self.ventanas.addWidget(self.lista_recetas)
+        self.ventanas.addWidget(self.gestion_envases)
+        self.ventanas.addWidget(self.gestion_costos_fijos)
+        self.ventanas.addWidget(self.lista_recetas)
         
         # Mostrar la ventana de cálculo por defecto
         self.ventanas.setCurrentWidget(self.calcu_ventana)
@@ -54,13 +55,13 @@ class VentanaPrincipal(QMainWindow):
         elif opcion == "Materiales":
             self.ventanas.setCurrentWidget(self.gestion_materiales)
         elif opcion == "Envases":
-            #self.ventanas.setCurrentWidget(self.gestion_envases)
+            self.ventanas.setCurrentWidget(self.gestion_envases)
             pass
         elif opcion == "Costos Fijos":
-            #self.ventanas.setCurrentWidget(self.gestion_costos_fijos)
+            self.ventanas.setCurrentWidget(self.gestion_costos_fijos)
             pass
         elif opcion == "Recetas":
-            #self.ventanas.setCurrentWidget(self.lista_recetas)
+            self.ventanas.setCurrentWidget(self.lista_recetas)
             pass
         else:
             print("Opción no reconocida")

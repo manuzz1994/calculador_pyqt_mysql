@@ -13,12 +13,12 @@ db = Database()
 # ==================================================
 # Consultas MATERIA_PRIMA
 # ==================================================
-def obtener_materias_primas():
+def obtener_materia_prima():
     """Obtiene todas las materias primas de la base de datos."""
     query = "SELECT * FROM MATERIA_PRIMA"
     return db.ejecutar_consulta(query)
 
-def obtener_materia_prima_por_id(materia_id):
+def obtener_materia_prima_id(materia_id):
     """Obtiene una materia prima por su ID."""
     query = "SELECT * FROM MATERIA_PRIMA WHERE id = %s"
     return db.ejecutar_consulta(query, (materia_id,))
@@ -41,6 +41,12 @@ def eliminar_materia_prima(materia_id):
     """Elimina una materia prima de la base de datos."""
     query = "DELETE FROM MATERIA_PRIMA WHERE id = %s"
     return db.ejecutar_consulta(query, (materia_id,))
+
+def verificar_material_en_uso(material_id):
+    """Verificar si el material está siendo usado en alguna receta"""
+    query = "SELECT COUNT(*) as count FROM receta_ingredientes WHERE materia_prima_id = %s"
+    resultado = db.ejecutar_consulta(query, (material_id,))
+    return resultado[0]['count'] > 0 if resultado else False
 
 # ==================================================
 # Consultas RECETAS

@@ -1,5 +1,4 @@
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QLabel, QComboBox, 
-                             QLineEdit, QPushButton, QFormLayout, QGroupBox)
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QLabel, QComboBox, QLineEdit, QPushButton, QFormLayout, QGroupBox)
 from PyQt5.QtCore import Qt
 import mysql.connector
 

@@ -1,12 +1,9 @@
 """
 Listar materia prima desde la base de datos con botones para el CRUD de materia prima.
 """
-# interface/ventanas/materiales/gestion_materiales.py
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
-                             QListWidget, QListWidgetItem, QPushButton, 
-                             QMessageBox)
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QListWidget, QListWidgetItem, QPushButton, QMessageBox, QInputDialog
 from PyQt5.QtCore import Qt
-from database.consultas import obtener_materias_primas
+from database.consultas import obtener_materia_prima, agregar_materia_prima, actualizar_materia_prima, eliminar_materia_prima, obtener_materia_prima_id, verificar_material_en_uso
 
 class GestionMateriales(QWidget):
     def __init__(self):
@@ -15,73 +12,165 @@ class GestionMateriales(QWidget):
         self.cargar_materiales()
     
     def init_ui(self):
-        # PASO 3: Crear el layout principal
         layout = QVBoxLayout()
         
-        # PASO 1: Agregar título
         titulo = QLabel("Gestión de Materia Prima")
         titulo.setObjectName("tituloSeccion")
         layout.addWidget(titulo)
         
-        # PASO 1: Agregar lista de materiales
         self.lista_materiales = QListWidget()
         layout.addWidget(self.lista_materiales)
         
-        # PASO 1 y 3: Agregar botones en layout horizontal
         layout_botones = QHBoxLayout()
         
-        # PASO 2: Crear botones para cada operación CRUD
+        #botones para cada operación CRUD
         self.btn_agregar = QPushButton("Agregar")
         self.btn_editar = QPushButton("Editar") 
         self.btn_eliminar = QPushButton("Eliminar")
         self.btn_actualizar = QPushButton("Actualizar")
         
-        # Agregar botones al layout horizontal
         layout_botones.addWidget(self.btn_agregar)
         layout_botones.addWidget(self.btn_editar)
         layout_botones.addWidget(self.btn_eliminar) 
         layout_botones.addWidget(self.btn_actualizar)
         
-        # Agregar el layout de botones al principal
         layout.addLayout(layout_botones)
         
         self.setLayout(layout)
 
         # Conectar botones a sus funciones
         self.btn_agregar.clicked.connect(self.agregar_material)
-        #self.btn_editar.clicked.connect(self.editar_material)
-        #self.btn_eliminar.clicked.connect(self.eliminar_material)
+        self.btn_editar.clicked.connect(self.editar_material)
+        self.btn_eliminar.clicked.connect(self.eliminar_material)
         self.btn_actualizar.clicked.connect(self.cargar_materiales)
 
-    # CARGAR MATERIALES
+
     def cargar_materiales(self):
         try:
             self.lista_materiales.clear()
-            materiales = obtener_materias_primas()
-            for material in materiales:
-                item = QListWidgetItem(f"{material['id']}: {material['nombre']} - ${material['precio_por_gramo']}/g - Tipo: {material['tipo']}")
-                item.setData(Qt.UserRole, material['id'])
-                self.lista_materiales.addItem(item)
+            
+            materiales = obtener_materia_prima()
+            
+            if materiales:
+                for material in materiales:
+                    texto_item = f"{material['nombre']} - ${material['precio_por_gramo']}/g ({material['tipo']})"
+                    item = QListWidgetItem(texto_item)                
+                    item.setData(Qt.UserRole, material['id'])
+                    self.lista_materiales.addItem(item)
             else:
-                self.lista_materiales.addItem("No hay materiales registrados.")
+                self.lista_materiales.addItem("No hay materiales registrados")
+                
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"No se pudieron cargar los materiales: {e}")
+            QMessageBox.critical(self, "Error", f"No se pudieron cargar los materiales: {str(e)}")
 
-    # FUNCIONES DE BOTONES
+
     def agregar_material(self):
-        """PASO 2: Función para agregar nuevo material"""
-        # PASO 5: Usar QInputDialog para pedir datos al usuario
+        nombre, ok = QInputDialog.getText(self, "Agregar Material", "Nombre del material:")
+        if not ok or not nombre.strip():
+            return
 
-        # Tip: Puedes usar QInputDialog.getText(), getDouble(), getItem()
-        
-        # 1. Pedir nombre del material
-        
-        # 2. Pedir precio por gramo  
-        
-        # 3. Pedir tipo (de una lista predefinida)
-        
-        # 4. PASO 4: Llamar a crear_materia_prima() con los datos
-        
-        # 5. PASO 5: Mostrar mensaje de éxito/error y recargar lista
+        precio, ok = QInputDialog.getDouble(
+            self, "Precio", "Precio por gramo:",
+            value=1.00, decimals=2
+        )
+        if not ok:
+            return
 
-        pass
+        tipos = ["cera", "aditivo", "escencia", "alcohol", "yeso", "agua"]
+        tipo, ok = QInputDialog.getItem(
+            self, "Tipo", "Selecciona el tipo:",
+            tipos, current=0, editable=False
+        )
+        if not ok:
+            return
+
+        try:
+            resultado = agregar_materia_prima(nombre.strip(), precio, tipo)       
+            if resultado is not None:
+                QMessageBox.information(self, "Éxito", "Material agregado correctamente")
+                self.cargar_materiales() 
+            else:
+                QMessageBox.critical(self, "Error", "No se pudo agregar el material")            
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Error al agregar material: {str(e)}")
+
+
+    def editar_material(self):
+        item_seleccionado = self.lista_materiales.currentItem()
+        if not item_seleccionado:
+            QMessageBox.warning(self, "Advertencia", "Selecciona un material para editar")
+            return
+
+        material_id = item_seleccionado.data(Qt.UserRole)
+        material = obtener_materia_prima_id(material_id)
+        if not material:
+            QMessageBox.critical(self, "Error", "No se encontró el material seleccionado")
+            return
+        material = material[0]
+
+        nombre, ok = QInputDialog.getText(
+            self, "Editar Material", "Nombre del material:",
+            text=material['nombre']
+        )
+        if not ok or not nombre.strip():
+            return
+
+        precio, ok = QInputDialog.getDouble(
+            self, "Precio", "Precio por gramo:",
+            value=material['precio_por_gramo'], decimals=2
+        )
+        if not ok:
+            return
+
+        tipos = ["cera", "aditivo", "escencia", "alcohol", "yeso", "agua"]
+        tipo, ok = QInputDialog.getItem(
+            self, "Tipo", "Selecciona el tipo:",
+            tipos, current=tipos.index(material['tipo']), editable=False
+        )
+        if not ok:
+            return
+
+        try:
+            resultado = actualizar_materia_prima(material_id, nombre.strip(), precio, tipo)
+            if resultado is not None:
+                QMessageBox.information(self, "Éxito", "Material actualizado correctamente")
+                self.cargar_materiales()
+            else:
+                QMessageBox.critical(self, "Error", "No se pudo actualizar el material")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Error al actualizar material: {str(e)}")
+
+
+    def eliminar_material(self):
+        item_seleccionado = self.lista_materiales.currentItem()
+        if not item_seleccionado:
+            QMessageBox.warning(self, "Advertencia", "Selecciona un material para eliminar")
+            return
+
+        material_id = item_seleccionado.data(Qt.UserRole)
+
+        if verificar_material_en_uso(material_id):
+            QMessageBox.warning(
+                self, "No se puede eliminar",
+                "Este material está siendo usado en una o más recetas.\n"
+                "Elimínalo de las recetas primero."
+            )
+            return
+
+        confirmacion = QMessageBox.question(
+            self, "Confirmar Eliminación",
+            "¿Estás seguro de que deseas eliminar este material?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+        if confirmacion != QMessageBox.Yes:
+            return
+
+        try:
+            resultado = eliminar_materia_prima(material_id)
+            if resultado is not None:
+                QMessageBox.information(self, "Éxito", "Material eliminado correctamente")
+                self.cargar_materiales()
+            else:
+                QMessageBox.critical(self, "Error", "No se pudo eliminar el material")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Error al eliminar material: {str(e)}")
