@@ -1,12 +1,12 @@
 from PyQt5.QtWidgets import QMainWindow, QWidget, QStackedWidget, QHBoxLayout
 from interface.barra_lateral import BarraLateral
-from interface.ventanas.calcu_ventana import CalcuVentana
-
 # Importar las nuevas ventanas modulares
+from interface.ventanas.calcu_ventana import CalcuVentana
 from interface.ventanas.materiales.gestion_materiales import GestionMateriales
 from interface.ventanas.materiales.gestion_envases import GestionEnvases
 from interface.ventanas.materiales.gestion_costos_fijos import GestionCostosFijos
 from interface.ventanas.recetas.lista_recetas import ListaRecetas
+from interface.ventanas.recetas.editar_receta import EditarReceta
 
 class VentanaPrincipal(QMainWindow):
     def __init__(self):
@@ -56,12 +56,9 @@ class VentanaPrincipal(QMainWindow):
             self.ventanas.setCurrentWidget(self.gestion_materiales)
         elif opcion == "Envases":
             self.ventanas.setCurrentWidget(self.gestion_envases)
-            pass
         elif opcion == "Costos Fijos":
             self.ventanas.setCurrentWidget(self.gestion_costos_fijos)
-            pass
         elif opcion == "Recetas":
             self.ventanas.setCurrentWidget(self.lista_recetas)
-            pass
         else:
             print("Opción no reconocida")

@@ -1,8 +1,10 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
+# interface/ventanas/recetas/editar_receta.py
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel
 
-class EditaReceta(QWidget):
-    def __init__(self):
-        super().__init__()
+class EditarReceta(QDialog):
+    def __init__(self, receta_id=None, modo="edicion", parent=None):
+        super().__init__(parent)
+        print("✅ EditarReceta inicializado")
         layout = QVBoxLayout()
-        layout.addWidget(QLabel("Editar Recetas - En desarrollo"))
+        layout.addWidget(QLabel("Editor de Recetas - En desarrollo"))
         self.setLayout(layout)
