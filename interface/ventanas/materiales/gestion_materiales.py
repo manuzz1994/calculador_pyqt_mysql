@@ -23,7 +23,6 @@ class GestionMateriales(QWidget):
         
         layout_botones = QHBoxLayout()
         
-        #botones para cada operación CRUD
         self.btn_agregar = QPushButton("Agregar")
         self.btn_editar = QPushButton("Editar") 
         self.btn_eliminar = QPushButton("Eliminar")
@@ -35,10 +34,8 @@ class GestionMateriales(QWidget):
         layout_botones.addWidget(self.btn_actualizar)
         
         layout.addLayout(layout_botones)
-        
         self.setLayout(layout)
 
-        # Conectar botones a sus funciones
         self.btn_agregar.clicked.connect(self.agregar_material)
         self.btn_editar.clicked.connect(self.editar_material)
         self.btn_eliminar.clicked.connect(self.eliminar_material)
@@ -71,7 +68,7 @@ class GestionMateriales(QWidget):
 
         precio, ok = QInputDialog.getDouble(
             self, "Precio", "Precio por gramo:",
-            value=1.00, decimals=2
+            decimals=2
         )
         if not ok:
             return
