@@ -6,7 +6,7 @@ class Database:
         self.host = 'localhost'
         self.database = 'calculadora_costos'
         self.user = 'root' 
-        self.password = 'brambilla09'  # PW bdd
+        self.password = 'Brambilla09'  # PW bdd
         
     def get_connection(self):
         try:
