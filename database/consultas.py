@@ -67,7 +67,7 @@ def obtener_receta_por_tipo(tipo):
     query = "SELECT * FROM RECETAS WHERE tipo = %s"
     return db.ejecutar_consulta(query, (tipo,))
 
-def agregar_receta(nombre, tipo, densidad):
+def agregar_receta(nombre, tipo, densidad=0.90):
     """Agrega una nueva receta a la base de datos."""
     query = "INSERT INTO RECETAS (nombre, tipo, densidad) VALUES (%s, %s, %s)"
     return db.ejecutar_consulta(query, (nombre, tipo, densidad))
@@ -108,30 +108,19 @@ def agregar_ingrediente_receta(receta_id, materia_prima_id, porcentaje):
     """
     return db.ejecutar_consulta(query, (receta_id, materia_prima_id, porcentaje))
 
-def actualizar_ingrediente_receta(ri_id, materia_prima_id, porcentaje):
-    query = """
-    UPDATE receta_ingredientes 
-    SET materia_prima_id = %s, porcentaje = %s 
-    WHERE ri_id = %s
-    """
-    return db.ejecutar_consulta(query, (materia_prima_id, porcentaje, ri_id))
-
 def eliminar_ingrediente_receta(ri_id):
     """Elimina un ingrediente de una receta."""
     query = "DELETE FROM receta_ingredientes WHERE ri_id = %s"
     return db.ejecutar_consulta(query, (ri_id,))
 
 def verificar_porcentaje_receta(receta_id):
-    """Verifica que el porcentaje total de los ingredientes de una receta sea 100%."""
-    query = """
-    SELECT SUM(porcentaje) AS total_porcentaje
-    FROM receta_ingredientes
-    WHERE receta_id = %s
-    """ # Verifica que el porcentaje total de los ingredientes de una receta sea 100%
+    """Verifica que el porcentaje total de los ingredientes sea 100%."""
+    query = "SELECT SUM(porcentaje) AS total_porcentaje FROM receta_ingredientes WHERE receta_id = %s"
     resultado = db.ejecutar_consulta(query, (receta_id,))
-    if resultado and resultado[0]['total_porcentaje'] is not None: # Si resultado no es None y total_porcentaje no es None
-        return resultado[0]['total_porcentaje'] == 100.0 # Retorna True si es 100.0, sino False
-    return False 
+    
+    if resultado and resultado[0]['total_porcentaje'] is not None:
+        return abs(resultado[0]['total_porcentaje'] - 100.0) < 0.01  # Margen para decimales
+    return False
 
 # ==================================================
 # Consultas ENVASES
@@ -206,8 +195,8 @@ def agregar_costo_fijo(concepto, precio, aplica_a):
     query = "INSERT INTO costos_fijos (concepto, precio, aplica_a) VALUES (%s, %s, %s)"
     return db.ejecutar_consulta(query, (concepto, precio, aplica_a))
 
-def actualizar_costo_fijo(costo_id, concepto, precio, aplica_a):
-    """Actualiza un costo fijo existente."""
+def editar_costo_fijo(costo_id, concepto, precio, aplica_a):
+    """Editar un costo fijo existente."""
     query = """
     UPDATE costos_fijos 
     SET concepto = %s, precio = %s, aplica_a = %s 
