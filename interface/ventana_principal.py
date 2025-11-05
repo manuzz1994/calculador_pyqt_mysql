@@ -6,7 +6,6 @@ from interface.ventanas.materiales.gestion_materiales import GestionMateriales
 from interface.ventanas.materiales.gestion_envases import GestionEnvases
 from interface.ventanas.materiales.gestion_costos_fijos import GestionCostosFijos
 from interface.ventanas.recetas.lista_recetas import ListaRecetas
-from interface.ventanas.recetas.editar_receta import EditarReceta
 
 class VentanaPrincipal(QMainWindow):
     def __init__(self):

@@ -93,11 +93,11 @@ def eliminar_receta(receta_id):
 def obtener_ingredientes_receta(receta_id):
     """Obtiene los ingredientes de una receta específica."""
     query = """
-    SELECT ri_id, mp.id AS materia_prima_id, mp.nombre, mp.precio_por_gramo, ri.porcentaje, mp.tipo, ri.porcentaje
+    SELECT ri.id, mp.id AS materia_prima_id, mp.nombre, mp.precio_por_gramo, ri.porcentaje, mp.tipo, ri.porcentaje
     FROM receta_ingredientes ri
     JOIN materia_prima mp ON ri.materia_prima_id = mp.id 
     WHERE ri.receta_id = %s
-    ORDER BY ri_id ASC
+    ORDER BY ri.id ASC
     """
     return db.ejecutar_consulta(query, (receta_id,))
 
@@ -121,6 +121,11 @@ def verificar_porcentaje_receta(receta_id):
     if resultado and resultado[0]['total_porcentaje'] is not None:
         return abs(resultado[0]['total_porcentaje'] - 100.0) < 0.01  # Margen para decimales
     return False
+
+def actualizar_ingrediente_receta(ingrediente_id, nuevo_porcentaje):
+    """Actualizar el porcentaje de un ingrediente existente"""
+    query = "UPDATE receta_ingredientes SET porcentaje = %s WHERE id = %s"
+    return db.ejecutar_consulta(query, (nuevo_porcentaje, ingrediente_id))
 
 # ==================================================
 # Consultas ENVASES
