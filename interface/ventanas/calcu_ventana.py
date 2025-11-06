@@ -103,26 +103,40 @@ class CalcuVentana(QWidget):
         producto = self.combo_producto.currentData()
         peso_agua = float(self.input_peso_agua.text())
         margen_ganancia = float(self.input_margen.text())
-        margen_ganancia /= 100.0  # Convertir a decimal
+        margen_ganancia /= 100.0
         envase_id = self.combo_envase.currentData()
         receta = obtener_receta_por_tipo(producto)
+        
         if not receta:
             self.label_resultados.setText("No se encontró una receta.")
             return
+        
         receta = receta[0]
-        densidad = float(receta['densidad'])
-        peso_real = peso_agua * densidad
+        densidad = round(float(receta['densidad']), 2)
+        peso_real = round(peso_agua * densidad, 2)
 
         ingredientes = obtener_ingredientes_receta(receta['id'])
         costo_materiales = 0.0
         detalle_ingredientes = []
 
         for ingrediente in ingredientes:
-            gramos_ingrediente = peso_real * (float(ingrediente['porcentaje']) / 100.0)
-            costo_ingrediente = gramos_ingrediente * float(ingrediente['precio_por_gramo'])
+            # ORDEN CORRECTO:
+            # 1. Primero obtener todos los valores
+            porcentaje = round(float(ingrediente['porcentaje']), 2)
+            precio_por_gramo = round(float(ingrediente['precio_por_gramo']), 2)
+            
+            # 2. Luego hacer los cálculos
+            gramos_ingrediente = peso_real * (porcentaje / 100.0)
+            gramos_ingrediente = round(gramos_ingrediente, 2)
+            
+            costo_ingrediente = gramos_ingrediente * precio_por_gramo
+            costo_ingrediente = round(costo_ingrediente, 2)
+            
+            # 3. Finalmente acumular
             costo_materiales += costo_ingrediente
+            
             detalle_ingredientes.append(
-                f"{ingrediente['nombre']}: {gramos_ingrediente:.1f} g x $ {ingrediente['precio_por_gramo']} /g = $ {costo_ingrediente:.2f}"
+                f"{ingrediente['nombre']}: {gramos_ingrediente:.2f} g x $ {precio_por_gramo:.2f} /g = $ {costo_ingrediente:.2f}"
             )
 
         costo_envase = 0.0
@@ -132,15 +146,18 @@ class CalcuVentana(QWidget):
             envase_data = obtener_envase_por_id(envase_id)
             if envase_data:
                 envase = envase_data[0]
-                costo_envase = float(envase['precio'])
+                costo_envase = round(float(envase['precio']), 2)  # ✅ Redondear aquí también
                 detalle_envase = f" - Envase {envase['nombre']} $ {costo_envase:.2f}"
 
         costos_fijos = obtener_costo_fijo_tipo(producto)
-        costo_fijos_total = sum(float(costo['precio']) for costo in costos_fijos)
-        detalle_fijos = [f" {costo['concepto']}: $ {costo['precio']}" for costo in costos_fijos]
+        costo_fijos_total = sum(round(float(costo['precio']), 2) for costo in costos_fijos)  # ✅ Redondear cada costo
+        
+        detalle_fijos = [f" {costo['concepto']}: $ {round(float(costo['precio']), 2):.2f}" for costo in costos_fijos]
 
-        costo_total = costo_materiales + costo_envase + costo_fijos_total
-        precio_venta = costo_total * (1 + margen_ganancia)
+        # Redondear todos los resultados finales
+        costo_materiales = round(costo_materiales, 2)
+        costo_total = round(costo_materiales + costo_envase + costo_fijos_total, 2)
+        precio_venta = round(costo_total * (1 + margen_ganancia), 2)
 
         self.mostrar_resultados(
             peso_agua=peso_agua, peso_real=peso_real, densidad=densidad,
@@ -149,6 +166,12 @@ class CalcuVentana(QWidget):
             costo_fijos_total=costo_fijos_total, detalle_fijos=detalle_fijos,
             costo_total=costo_total, margen_ganancia=margen_ganancia, precio_venta=precio_venta
         )
+
+        costo_materiales = round(costo_materiales, 2)
+        costo_envase = round(costo_envase, 2)
+        costo_fijos_total = round(costo_fijos_total, 2)
+        costo_total = round(costo_total, 2)
+        precio_venta = round(precio_venta, 2)
 
     def mostrar_resultados(self, peso_agua, peso_real, densidad,
                           costo_materiales, detalle_ingredientes,
