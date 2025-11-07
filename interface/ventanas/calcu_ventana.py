@@ -49,7 +49,7 @@ class CalcuVentana(QWidget):
         layout_formulario.addRow("Peso de agua (g):", self.input_peso_agua)
         
         self.input_margen = QLineEdit()
-        self.input_margen.setPlaceholderText("Ej: 50")
+        self.input_margen.setPlaceholderText("Ej: 50 (SIN - % -)")
         layout_formulario.addRow("Margen ganancia (%):", self.input_margen)
         
         grupo_formulario.setLayout(layout_formulario)
@@ -65,14 +65,13 @@ class CalcuVentana(QWidget):
         self.btn_calcular.clicked.connect(self.calcular_costos)
         layout_principal.addWidget(self.btn_calcular)
         
-        self.label_resultados = QLabel("Los resultados son:")
+        self.label_resultados = QLabel("Los resultados se mostrarán aquí")
         self.label_resultados.setWordWrap(True)
         layout_principal.addWidget(self.label_resultados)
         
         self.setLayout(layout_principal)
-
-        self.actualizar_formulario()  # Cargar datos iniciales
         
+        self.actualizar_formulario()
     def actualizar_formulario(self):
         """Funcion para actualizar el formulario según el producto seleccionado"""
         producto = self.combo_producto.currentData()
@@ -103,7 +102,7 @@ class CalcuVentana(QWidget):
         producto = self.combo_producto.currentData()
         peso_agua = float(self.input_peso_agua.text())
         margen_ganancia = float(self.input_margen.text())
-        margen_ganancia /= 100.0
+        margen_ganancia /= 100
         envase_id = self.combo_envase.currentData()
         receta = obtener_receta_por_tipo(producto)
         
@@ -120,19 +119,16 @@ class CalcuVentana(QWidget):
         detalle_ingredientes = []
 
         for ingrediente in ingredientes:
-            # ORDEN CORRECTO:
-            # 1. Primero obtener todos los valores
+            
             porcentaje = round(float(ingrediente['porcentaje']), 2)
             precio_por_gramo = round(float(ingrediente['precio_por_gramo']), 2)
             
-            # 2. Luego hacer los cálculos
             gramos_ingrediente = peso_real * (porcentaje / 100.0)
             gramos_ingrediente = round(gramos_ingrediente, 2)
             
             costo_ingrediente = gramos_ingrediente * precio_por_gramo
             costo_ingrediente = round(costo_ingrediente, 2)
             
-            # 3. Finalmente acumular
             costo_materiales += costo_ingrediente
             
             detalle_ingredientes.append(
@@ -146,18 +142,17 @@ class CalcuVentana(QWidget):
             envase_data = obtener_envase_por_id(envase_id)
             if envase_data:
                 envase = envase_data[0]
-                costo_envase = round(float(envase['precio']), 2)  # ✅ Redondear aquí también
+                costo_envase = round(float(envase['precio']), 2)
                 detalle_envase = f" - Envase {envase['nombre']} $ {costo_envase:.2f}"
 
         costos_fijos = obtener_costo_fijo_tipo(producto)
-        costo_fijos_total = sum(round(float(costo['precio']), 2) for costo in costos_fijos)  # ✅ Redondear cada costo
+        costo_fijos_total = sum(round(float(costo['precio']), 2) for costo in costos_fijos)
         
         detalle_fijos = [f" {costo['concepto']}: $ {round(float(costo['precio']), 2):.2f}" for costo in costos_fijos]
 
-        # Redondear todos los resultados finales
         costo_materiales = round(costo_materiales, 2)
         costo_total = round(costo_materiales + costo_envase + costo_fijos_total, 2)
-        precio_venta = round(costo_total * (1 + margen_ganancia), 2)
+        precio_venta = round(costo_total / (1 - margen_ganancia), 2)
 
         self.mostrar_resultados(
             peso_agua=peso_agua, peso_real=peso_real, densidad=densidad,
@@ -180,6 +175,7 @@ class CalcuVentana(QWidget):
                           costo_total, margen_ganancia, precio_venta):
         resultados = f"""
         RESULTADOS DE CÁLCULO: <br>
+        ------------------------------<br>
         - Peso de agua: {peso_agua:.1f} g <br>
         - Peso real del producto: {peso_real:.1f} g -  (Densidad: {densidad})<br><br>
         - Costo de materiales: $ {costo_materiales:.2f}<br>
@@ -188,8 +184,9 @@ class CalcuVentana(QWidget):
         - Costo de costos fijos: $ {costo_fijos_total:.2f}<br>
             {"<br>".join([f"- {costo}" for costo in detalle_fijos])}<br><br>
         RESUMEN:<br>
-        - Costo total del producto: $ {costo_total:.2f}<br>
-        - Margen de ganancia: {margen_ganancia:.1f} %<br>
+        ------------------------------<br>
+        - Precio de COSTO: $ {costo_total:.2f}<br>
+        - Margen de ganancia: {margen_ganancia:.1f} % (Margen profit)<br>
         - Precio de venta sugerido: $ {precio_venta:.2f}<br>
         """
         self.label_resultados.setText(resultados)

@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QWidget, QStackedWidget, QHBoxLayout
 from interface.barra_lateral import BarraLateral
+from PyQt5.QtGui import QIcon
 # Importar las nuevas ventanas modulares
 from interface.ventanas.calcu_ventana import CalcuVentana
 from interface.ventanas.materiales.gestion_materiales import GestionMateriales
@@ -11,8 +12,9 @@ class VentanaPrincipal(QMainWindow):
     def __init__(self):
         super().__init__()
         
-        self.setWindowTitle("Calculadora de Recetas")
-        self.setGeometry(100, 100, 800, 600)
+        self.setWindowTitle("Calculadora de Producción")
+        self.setWindowIcon(QIcon("estilos/ico1.png"))
+        self.setGeometry(700, 30, 450, 500)
         self.setObjectName("VentanaPrincipal")
         
         # Contenedor principal

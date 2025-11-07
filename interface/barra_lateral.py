@@ -12,7 +12,6 @@ class BarraLateral(QWidget):
         layout_izquierda.setSpacing(10)
         layout_izquierda.setContentsMargins(10, 10, 10, 10)
         
-        # Botones de la barra lateral - MÁS OPCIONES
         self.buttons = {
             "Calculadora": QPushButton("Calculadora"),
             "Materiales": QPushButton("Materiales"),
